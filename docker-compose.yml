@@ -1,0 +1,38 @@
+version: '2'
+
+services:
+    db:
+        image: mysql
+        volumes:
+            - "./.data/db:/var/lib/mysql"
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: myevernote
+            MYSQL_USER: root
+            MYSQL_PASSWORD: password
+    php:
+        build:
+            context: ./docker/php7-fpm
+            args:
+                TIMEZONE: Europe/Paris
+        volumes:
+            - ./symfony:/var/www/symfony:cached
+            - /logs/symfony:/var/www/symfony/app/logs
+    nginx:
+        build: ./docker/nginx
+        ports:
+            - 80:80
+        volumes_from:
+            - php
+        volumes:
+            - /logs/nginx/:/var/log/nginx
+    elk:
+        image: willdurand/elk
+        ports:
+            - 81:80
+        volumes:
+            - ./elk/logstash:/etc/logstash
+            - ./elk/logstash/patterns:/opt/logstash/patterns
+        volumes_from:
+            - php
+            - nginx
