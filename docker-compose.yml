@@ -6,22 +6,22 @@ services:
         volumes:
             - "./.data/db:/var/lib/mysql"
         environment:
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: myevernote
-            MYSQL_USER: root
-            MYSQL_PASSWORD: password
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     php:
         build:
             context: ./docker/php7-fpm
             args:
-                TIMEZONE: Europe/Paris
+                TIMEZONE: ${TIMEZONE}
         volumes:
-            - ./symfony:/var/www/symfony:cached
-            - /logs/symfony:/var/www/symfony/app/logs
+            - ${SYMFONY_APP_PATH}:/var/www/symfony
+            - ./logs/symfony:/var/www/symfony/app/logs
     nginx:
         build: ./docker/nginx
         ports:
-            - 80:80
+            - 8080:80
         volumes_from:
             - php
         volumes:
