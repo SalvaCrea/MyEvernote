@@ -1,41 +1,39 @@
-var path = require('path');
+var Encore = require('@symfony/webpack-encore');
 
-var HtmlWebPackPlugin = require("html-webpack-plugin");
-var htmlPlugin = new HtmlWebPackPlugin({
-    template: "./assets/template/index.html"
-    // filename: "./assets/template/index.html"
-});
+Encore
+    // directory where compiled assets will be stored
+    .setOutputPath('public/build/')
+    // public path used by the web server to access the output path
+    .setPublicPath('/build')
+    // only needed for CDN's or sub-directory deploy
+    //.setManifestKeyPrefix('build/')
+    
+    /*
+     * ENTRY CONFIG
+     *
+     * Add 1 entry for each "page" of your app
+     * (including one that's included on every page - e.g. "app")
+     *
+     * Each entry will result in one JavaScript file (e.g. app.js)
+     * and one CSS file (e.g. app.css) if you JavaScript imports CSS.
+     */
+    .addEntry('app', './assets/app.js')
+    /** Add the loader Vue JS */
+    // .enableVueLoader()
+    //.addEntry('page1', './assets/js/page1.js')
+    //.addEntry('page2', './assets/js/page2.js')
 
-module.exports = {
-    mode: 'development',
-    entry: ['./assets/main.ts', './assets/scss/app.scss'],
+    // will require an extra script tag for runtime.js
+    // but, you probably want this, unless you're building a single-page app
+    .enableSingleRuntimeChunk()
 
-    module: {
-        rules: [
-            /**
-             * JSX Rules
-             */
-            {
-                test: /\.ts?$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: "ts-loader"
-                }
-            },
-            /**
-             *  Sass Rules
-             */
-            {
-                test: /\.scss$/,
-                use: [
-                    "style-loader", // creates style nodes from JS strings
-                    "css-loader", // translates CSS into CommonJS
-                    "sass-loader" // compiles Sass to CSS
-                ]
-            }
-        ]
-    },
-    plugins: [
-        htmlPlugin
-    ]
-};
+    .cleanupOutputBeforeBuild()
+    .enableSourceMaps(!Encore.isProduction())
+    // enables hashed filenames (e.g. app.abc123.css)
+    .enableVersioning(Encore.isProduction())
+
+    // Used for Sass
+    .enableSassLoader()
+;
+
+module.exports = Encore.getWebpackConfig();

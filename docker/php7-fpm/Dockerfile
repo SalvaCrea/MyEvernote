@@ -37,4 +37,7 @@ RUN pecl install xdebug \
 RUN echo 'alias sf="php app/console"' >> ~/.bashrc \
 && echo 'alias sf3="php bin/console"' >> ~/.bashrc
 
+# RUN composer install -d=/var/www/symfony
+
 WORKDIR /var/www/symfony
+

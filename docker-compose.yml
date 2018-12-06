@@ -1,31 +1,41 @@
-version: '2'
 
+# Version utilisée par docker
+version: '3'
+
+# listes des services
 services:
+    # nom du service 
     db:
+        # image source 
         image: mysql
+        # dossier symbolique ./.data/db =  /var/lib/mysql
         volumes:
             - "./.data/db:/var/lib/mysql"
+        # variables données à l'image
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     php:
+        # argument de construction qui peux être une string du patch du Dockerfile ou un object 
         build:
+            #path 
             context: ./docker/php7-fpm
             args:
                 TIMEZONE: ${TIMEZONE}
         volumes:
             - ${SYMFONY_APP_PATH}:/var/www/symfony
             - ./logs/symfony:/var/www/symfony/app/logs
+ 
+
     nginx:
         build: ./docker/nginx
         ports:
             - 8080:80
-        volumes_from:
-            - php
         volumes:
             - /logs/nginx/:/var/log/nginx
+
     elk:
         image: willdurand/elk
         ports:
@@ -33,6 +43,12 @@ services:
         volumes:
             - ./elk/logstash:/etc/logstash
             - ./elk/logstash/patterns:/opt/logstash/patterns
-        volumes_from:
-            - php
-            - nginx
+    
+    node:
+        build: ./docker/node
+        ports:
+            - 82:80
+        volumes:
+            - ${SYMFONY_APP_PATH}:/var/www/symfony
+        command: bash -c "yarn && yarn encore dev --watch"
+        
