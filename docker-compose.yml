@@ -10,7 +10,7 @@ services:
         image: mysql
         # dossier symbolique ./.data/db =  /var/lib/mysql
         volumes:
-            - "./.data/db:/var/lib/mysql"
+            - "${SYMFONY_APP_PATH}/.data/db:/var/lib/mysql"
         # variables données à l'image
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}

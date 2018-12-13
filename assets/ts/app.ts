@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: '#app'
+    selector: 'app'
 })
 export class App {
-    test() {
-        
-    }
+    title = "welcome on the Angular App";
 }
