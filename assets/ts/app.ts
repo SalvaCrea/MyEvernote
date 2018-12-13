@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: '#my-app'
+    selector: '#app'
 })
-export class AppComponent {
+export class App {
     test() {
         
     }

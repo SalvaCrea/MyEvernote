@@ -2,8 +2,6 @@
 FROM php:7.2-fpm
 ARG TIMEZONE
 
-MAINTAINER Maxence POUTORD <maxence.poutord@gmail.com>
-
 RUN apt-get update && apt-get install -y \
     openssl \
     git \
@@ -21,7 +19,6 @@ RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} >
 # Type docker-php-ext-install to see available extensions
 RUN docker-php-ext-install pdo pdo_mysql
 
-
 # install xdebug
 RUN pecl install xdebug \
 && docker-php-ext-enable xdebug \
@@ -33,11 +30,7 @@ RUN pecl install xdebug \
 && echo "xdebug.idekey=\"PHPSTORM\"" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
 && echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-
-RUN echo 'alias sf="php app/console"' >> ~/.bashrc \
-&& echo 'alias sf3="php bin/console"' >> ~/.bashrc
-
-# RUN composer install -d=/var/www/symfony
+CMD bash -c "composer install"
 
 WORKDIR /var/www/symfony
 
