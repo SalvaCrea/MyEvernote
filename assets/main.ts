@@ -1,4 +1,10 @@
 import './scss/app.scss';
-import { App } from './ts/app';
+// import { App } from './ts/app';
+import { Component } from '@angular/core';
 
-export default App;
+@Component({
+    selector: 'app'
+})
+export class App {
+    title = "welcome on the Angular App"; 
+}

@@ -4,5 +4,5 @@ import { Component } from '@angular/core';
     selector: 'app'
 })
 export class App {
-    title = "welcome on the Angular App";
+    title = "welcome on the Angular App"; 
 }
